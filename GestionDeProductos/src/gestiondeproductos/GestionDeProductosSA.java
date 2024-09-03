@@ -5,18 +5,24 @@
  */
 package gestiondeproductos;
 
+
+import java.util.HashSet;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author user
  */
 public class GestionDeProductosSA extends javax.swing.JFrame {
+public static HashSet<Producto> listadoProducto = new HashSet<>();
 
     /**
      * Creates new form GestionDeProductosSA
      */
     public GestionDeProductosSA() {
         initComponents();
- 
+        cargarComboBox();
     }
 
     /**
@@ -54,8 +60,6 @@ public class GestionDeProductosSA extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Nombre");
-
-        jCBCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -161,6 +165,18 @@ public class GestionDeProductosSA extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
+         Categoria categoria = (Categoria) jCBCategoria.getModel().getSelectedItem();
+         String nombre = jTNombre.getText();
+         double precio = Double.parseDouble(jTPrecio.getText());
+         
+         Producto produc = new Producto(categoria, nombre, precio);
+         listadoProducto.add(produc);
+         
+         String mensaje = String.format("El producto:\nNombre: %s\nCategoría: %s\nPrecio: %.2f\n\nFue agregado con éxito.", 
+                               nombre, categoria.toString(), precio);
+
+        // Mostrar el mensaje en el JOptionPane
+        JOptionPane.showMessageDialog(null, mensaje);
          
     }//GEN-LAST:event_jBAgregarActionPerformed
 
@@ -201,7 +217,7 @@ public class GestionDeProductosSA extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBAgregar;
-    private javax.swing.JComboBox<String> jCBCategoria;
+    private javax.swing.JComboBox<Categoria> jCBCategoria;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -212,6 +228,10 @@ public class GestionDeProductosSA extends javax.swing.JFrame {
     private javax.swing.JTextField jTPrecio;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+    private void cargarComboBox(){
+        jCBCategoria.setModel(new DefaultComboBoxModel<>(Categoria.values()));
+    }
 
     
 }
