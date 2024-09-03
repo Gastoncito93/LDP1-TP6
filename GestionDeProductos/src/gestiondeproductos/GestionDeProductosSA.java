@@ -16,6 +16,7 @@ public class GestionDeProductosSA extends javax.swing.JFrame {
      */
     public GestionDeProductosSA() {
         initComponents();
+ 
     }
 
     /**
@@ -63,6 +64,11 @@ public class GestionDeProductosSA extends javax.swing.JFrame {
         jBAgregar.setFont(new java.awt.Font("Times New Roman", 2, 18)); // NOI18N
         jBAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestiondeproductos/add-to-cart.png"))); // NOI18N
         jBAgregar.setText("Agregar");
+        jBAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAgregarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -154,6 +160,10 @@ public class GestionDeProductosSA extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
+         
+    }//GEN-LAST:event_jBAgregarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -202,4 +212,7 @@ public class GestionDeProductosSA extends javax.swing.JFrame {
     private javax.swing.JTextField jTPrecio;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+    
 }
+
