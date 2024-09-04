@@ -9,13 +9,16 @@ package gestiondeproductos;
 import java.util.HashSet;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author user
  */
 public class GestionDeProductosSA extends javax.swing.JFrame {
+    
 public static HashSet<Producto> listadoProducto = new HashSet<>();
+public static DefaultTableModel modelo = new DefaultTableModel();
 
     /**
      * Creates new form GestionDeProductosSA
@@ -23,6 +26,7 @@ public static HashSet<Producto> listadoProducto = new HashSet<>();
     public GestionDeProductosSA() {
         initComponents();
         cargarComboBox();
+        cargarModeloTabla();
     }
 
     /**
@@ -44,7 +48,7 @@ public static HashSet<Producto> listadoProducto = new HashSet<>();
         jTNombre = new javax.swing.JTextField();
         jBAgregar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableCategoria = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImages(null);
@@ -118,7 +122,9 @@ public static HashSet<Producto> listadoProducto = new HashSet<>();
                 .addContainerGap(55, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableCategoria.setBorder(new javax.swing.border.MatteBorder(null));
+        jTableCategoria.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jTableCategoria.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -129,11 +135,12 @@ public static HashSet<Producto> listadoProducto = new HashSet<>();
                 "Title 1", "Title 2", "Title 3"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setHeaderValue("Title 1");
-            jTable1.getColumnModel().getColumn(1).setHeaderValue("Title 2");
-            jTable1.getColumnModel().getColumn(2).setHeaderValue("Title 3");
+        jTableCategoria.setDragEnabled(true);
+        jScrollPane1.setViewportView(jTableCategoria);
+        if (jTableCategoria.getColumnModel().getColumnCount() > 0) {
+            jTableCategoria.getColumnModel().getColumn(0).setHeaderValue("Title 1");
+            jTableCategoria.getColumnModel().getColumn(1).setHeaderValue("Title 2");
+            jTableCategoria.getColumnModel().getColumn(2).setHeaderValue("Title 3");
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -165,19 +172,27 @@ public static HashSet<Producto> listadoProducto = new HashSet<>();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
-         Categoria categoria = (Categoria) jCBCategoria.getModel().getSelectedItem();
-         String nombre = jTNombre.getText();
-         double precio = Double.parseDouble(jTPrecio.getText());
-         
-         Producto produc = new Producto(categoria, nombre, precio);
-         listadoProducto.add(produc);
-         
-         String mensaje = String.format("El producto:\nNombre: %s\nCategoría: %s\nPrecio: %.2f\n\nFue agregado con éxito.", 
-                               nombre, categoria.toString(), precio);
-
-        // Mostrar el mensaje en el JOptionPane
-        JOptionPane.showMessageDialog(null, mensaje);
-         
+         try {
+            Categoria categoria = (Categoria) jCBCategoria.getSelectedItem();
+            if (categoria == null) {
+                throw new IllegalArgumentException("Por favor seleccione una categoría.");
+            }
+            String nombre = jTNombre.getText().trim();
+            if (nombre.isEmpty()) {
+                throw new IllegalArgumentException("El nombre del producto no puede estar vacío.");
+            }
+            double precio = Double.parseDouble(jTPrecio.getText());
+            Producto produc = new Producto(categoria, nombre, precio);
+            agregarProductoTabla(produc);
+            JOptionPane.showMessageDialog(null, "Se cargó el producto.");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "El precio debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error de entrada", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+      
     }//GEN-LAST:event_jBAgregarActionPerformed
 
     /**
@@ -226,13 +241,24 @@ public static HashSet<Producto> listadoProducto = new HashSet<>();
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTNombre;
     private javax.swing.JTextField jTPrecio;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableCategoria;
     // End of variables declaration//GEN-END:variables
 
     private void cargarComboBox(){
         jCBCategoria.setModel(new DefaultComboBoxModel<>(Categoria.values()));
     }
-
+    
+    private void cargarModeloTabla(){
+        
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Categoria");
+        modelo.addColumn("Precio");
+        jTableCategoria.setModel(modelo);
+    }
+    
+    private void agregarProductoTabla(Producto producto){
+        modelo.addRow(new Object[]{producto.getNombre(), producto.getCategoria(), producto.getPrecio()});
+    }
     
 }
 
